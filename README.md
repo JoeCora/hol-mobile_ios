@@ -2,6 +2,7 @@ hol-mobile_ios
 ==============
 
 Hymenoptera Online (HOL) mobile app for iOS
+Build: 1.0 (30-Apr-2013)
 
 
 description
