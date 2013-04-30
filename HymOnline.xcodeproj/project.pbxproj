@@ -95,6 +95,8 @@
 		F976B94411B6E5CE00C510ED /* HOLServerInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = F976B94311B6E5CE00C510ED /* HOLServerInteraction.m */; };
 		F97763EA124932B900FCB58F /* HOLTaxonMapSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = F97763E9124932B900FCB58F /* HOLTaxonMapSettings.m */; };
 		F9776540124A8DC000FCB58F /* HOLTaxonHabitatImages.m in Sources */ = {isa = PBXBuildFile; fileRef = F977653F124A8DC000FCB58F /* HOLTaxonHabitatImages.m */; };
+		F97AC371173061D800490107 /* Default~ipad-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = F97AC36F173061D800490107 /* Default~ipad-Landscape@2x~ipad.png */; };
+		F97AC372173061D800490107 /* Default~ipad-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = F97AC370173061D800490107 /* Default~ipad-Landscape~ipad.png */; };
 		F9B29CB1124147D40056A340 /* HOLMoreController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B29CB0124147D40056A340 /* HOLMoreController.m */; };
 		F9B29CC1124156360056A340 /* HOLAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9B29CC0124156360056A340 /* HOLAboutViewController.m */; };
 		F9EC30A711A32D9600626F95 /* HOLTaxonLiteratureController.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EC30A611A32D9600626F95 /* HOLTaxonLiteratureController.m */; };
@@ -389,6 +391,8 @@
 		F97763E9124932B900FCB58F /* HOLTaxonMapSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOLTaxonMapSettings.m; sourceTree = "<group>"; };
 		F977653E124A8DC000FCB58F /* HOLTaxonHabitatImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOLTaxonHabitatImages.h; sourceTree = "<group>"; };
 		F977653F124A8DC000FCB58F /* HOLTaxonHabitatImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOLTaxonHabitatImages.m; sourceTree = "<group>"; };
+		F97AC36F173061D800490107 /* Default~ipad-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad-Landscape@2x~ipad.png"; path = "images/Default~ipad-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		F97AC370173061D800490107 /* Default~ipad-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad-Landscape~ipad.png"; path = "images/Default~ipad-Landscape~ipad.png"; sourceTree = "<group>"; };
 		F9B29CAF124147D40056A340 /* HOLMoreController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOLMoreController.h; sourceTree = "<group>"; };
 		F9B29CB0124147D40056A340 /* HOLMoreController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOLMoreController.m; sourceTree = "<group>"; };
 		F9B29CBF124156360056A340 /* HOLAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOLAboutViewController.h; sourceTree = "<group>"; };
@@ -731,6 +735,8 @@
 		F90744A91725EC6900B6E50B /* iOS-images */ = {
 			isa = PBXGroup;
 			children = (
+				F97AC36F173061D800490107 /* Default~ipad-Landscape@2x~ipad.png */,
+				F97AC370173061D800490107 /* Default~ipad-Landscape~ipad.png */,
 				F910461E17300B9200C23194 /* Default-568h@2x.png */,
 				F910461F17300B9200C23194 /* Default@2x.png */,
 				F910462017300B9200C23194 /* Default~ipad-Portrait@2x~ipad.png */,
@@ -1037,6 +1043,8 @@
 				F910464517300BD100C23194 /* HOLNaviBar-iPad.xib in Resources */,
 				F910464617300BD100C23194 /* HOLNearbyMapSettings-iPad.xib in Resources */,
 				F910464717300BD100C23194 /* HOLTaxonMapSettings-iPad.xib in Resources */,
+				F97AC371173061D800490107 /* Default~ipad-Landscape@2x~ipad.png in Resources */,
+				F97AC372173061D800490107 /* Default~ipad-Landscape~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
