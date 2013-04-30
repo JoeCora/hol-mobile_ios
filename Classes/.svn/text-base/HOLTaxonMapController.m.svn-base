@@ -1,0 +1,183 @@
+    //
+//  HOLTaxonMapController.m
+//  HymOnline
+//
+//  Created by Joe Cora on 3/13/10.
+//  Copyright 2010 Ohio State University. All rights reserved.
+//
+
+#import "HOLTaxonMapController.h"
+
+
+@implementation HOLTaxonMapController
+
+@synthesize mapView;
+@synthesize settings;
+
+// Implement loadView to create a view hierarchy programmatically, without using a nib.
+- (void)loadView {
+	// Load the distribution map
+	CGRect bodyFrame = CGRectMake(0, 0, [UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height - 44.0);
+	MKMapView *tempMapView = [[MKMapView alloc] initWithFrame:bodyFrame];
+	self.mapView = tempMapView;
+	MKCoordinateRegion region;
+	MKCoordinateSpan span;
+	
+	[tempMapView release];
+	
+	span.latitudeDelta = 150.0;
+	span.longitudeDelta = 150.0;
+	
+	CLLocationCoordinate2D location = self.mapView.userLocation.coordinate;
+	
+	location.latitude = 0.0;
+	location.longitude = 0.0;
+	region.span = span;
+	region.center = location;
+	
+	[self.mapView setRegion:region animated:TRUE];
+	[self.mapView regionThatFits:region];
+	
+	self.mapView.delegate = self;
+	
+	// Add the distribution points to the map
+	HOLServerInteraction *server = [[HOLServerInteraction alloc] initWithSettings:self.settings];
+	NSDictionary *dictInfo = [server getLocalities];
+	
+	[server release];
+	
+	// Check if results were available (internet enabled)
+	if (dictInfo != nil) {
+		NSArray *arrayLocs = [dictInfo objectForKey:@"localities"];
+		
+		NSMutableArray *arrayPlaces = [[NSMutableArray alloc] initWithCapacity:[arrayLocs count]];
+		HOLMapPoint *placemark;
+		HOLMAPPOINTTYPE ptType;
+		
+		for (NSDictionary *dictLoc in arrayLocs) {
+			location.latitude = [[dictLoc objectForKey:@"lat"] floatValue];
+			location.longitude = [[dictLoc objectForKey:@"long"] floatValue];
+			
+			// Check if point or polygon
+			if ([[dictLoc objectForKey:@"type"] isEqualToString:@"point"]) {
+				ptType = HOLMAPPOINT;
+			} else {
+				ptType = HOLMAPPOLYGON;
+			}
+			
+			placemark = [[HOLMapPoint alloc] initWithCoordinates:location ptType:ptType];
+			
+			placemark.locID = [dictLoc objectForKey:@"id"];
+			
+			[arrayPlaces addObject:placemark];
+			
+			[placemark release];
+		}
+		
+		[self.mapView addAnnotations:arrayPlaces];
+		
+		[arrayPlaces release];
+	} else {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Server communication error" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		[alert release]; 
+	}
+	
+	// Set the map as the view
+	self.view = self.mapView;
+}
+
+
+/*
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+    [super viewDidLoad];
+}
+*/
+
+- (void)viewWillAppear:(BOOL)animated {
+	// Enable landscape orientation
+	[self.settings disablePortraitLock];
+	
+	// Hide loading image
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HOLHIDELOADING" object:self];
+	
+	// Set title text when view is about to be shown
+	[self.settings.taxonNaviBar setText:@"Map"];
+	
+	[super viewWillAppear:animated];
+}
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations
+    return YES;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		[self.navigationController setNavigationBarHidden:NO];
+	} else {
+		[self.navigationController setNavigationBarHidden:YES];
+	}
+}
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+
+- (void)dealloc {
+	[self.settings release];
+	[self.mapView release];
+    [super dealloc];
+}
+
+// Map specific functions
+- (MKAnnotationView *) mapView:(MKMapView *)theMapView viewForAnnotation:(id <MKAnnotation>) annotation {
+	HOLMapPoint *mapAnn = (HOLMapPoint *)annotation;
+	HOLMapPointView *annView;
+	
+	// Check if point or polygon
+	if (mapAnn.pointType == HOLMAPPOINT) {
+		static NSString *annIdentifier = @"distPoint";
+		
+		annView = (HOLMapPointView*)[theMapView dequeueReusableAnnotationViewWithIdentifier:annIdentifier];
+		
+		if (annView == nil) {
+			annView = [[[HOLMapPointView alloc] initWithSettings:self.settings annotation:annotation ptType:HOLMAPPOINT
+												 reuseIdentifier:annIdentifier] autorelease];
+		}
+	} else {
+		static NSString *annIdentifier = @"distPoly";
+		
+		annView = (HOLMapPointView*)[theMapView dequeueReusableAnnotationViewWithIdentifier:annIdentifier];
+		
+		if (annView == nil) {
+			annView = [[[HOLMapPointView alloc] initWithSettings:self.settings annotation:annotation ptType:HOLMAPPOLYGON
+												 reuseIdentifier:annIdentifier] autorelease];
+		}
+	}
+	
+	return annView;
+}
+
+// Public functions
+- (id)initWithSettings:(HOLSettings *)loadSettings {
+	self = [super init];
+	
+	self.settings = loadSettings;
+	
+	return self;
+}
+
+@end

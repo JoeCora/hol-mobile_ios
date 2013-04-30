@@ -1,0 +1,26 @@
+//
+//  HOLTaxonTypes.h
+//  HymOnline
+//
+//  Created by Joe Cora on 8/3/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HOLServerInteraction.h"
+#import "HOLSettings.h"
+
+@interface HOLTaxonTypes : UITableViewController {
+	HOLSettings *settings;
+	NSArray *types;
+	NSInteger nNumRows;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, retain) NSArray *types;
+@property (nonatomic) NSInteger nNumRows;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings;
+
+@end

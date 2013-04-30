@@ -1,0 +1,90 @@
+//
+//  HOLPictureSource.m
+//  HymOnline
+//
+//  Created by Joe Cora on 4/3/10.
+//  Copyright 2010 Ohio State University. All rights reserved.
+//
+
+#import "HOLPictureSource.h"
+
+@implementation HOLPictureSource
+
+@synthesize images;
+@synthesize title;
+@synthesize settings;
+
+// Public functions
+- (id)initWithSettings:(HOLSettings *)loadSettings type:(NSString *)type {
+	self = [super init];
+	
+	self.settings = loadSettings;
+	
+	// Get the images based on type of page (taxon only as of now)
+	HOLServerInteraction *server = [[HOLServerInteraction alloc] initWithSettings:self.settings];
+	NSDictionary *dictInfo = [server getTaxonImages];
+	
+	[server release];
+	
+	// Check if results were available (internet enabled)
+	if (dictInfo != nil) {
+		NSArray *arrayImageRefs = [dictInfo objectForKey:@"images"];
+		NSMutableArray *arrayImages = [[NSMutableArray alloc] initWithCapacity:[arrayImageRefs count]];
+		
+		for (NSDictionary *dictImage in arrayImageRefs) {
+			HOLPicture *currentImage = [[HOLPicture alloc] initWithThumbnail:[dictImage objectForKey:@"thumb"] compressed:[dictImage objectForKey:@"normalRes"]
+																	 caption:[dictImage objectForKey:@"caption"] size:CGSizeMake(1600, 1200)];
+			
+			currentImage.photoSource = self;
+			currentImage.index = [arrayImages count];
+			
+			[arrayImages addObject:currentImage];
+			
+			[currentImage release];
+		}
+		
+		self.images = arrayImages;
+		
+		[arrayImages release];
+	}
+	
+    return self;
+}
+
+#pragma mark -
+#pragma mark TTPhotoSource protocol
+
+- (NSInteger)numberOfPhotos {
+    return [self.images count];
+}
+
+- (NSInteger)maxPhotoIndex {
+    return [self.images count] - 1;
+}
+
+- (id<TTPhoto>)photoAtIndex:(NSInteger)index {
+	if (index < [self.images count]) {
+		return (id<TTPhoto>)[self.images objectAtIndex:index];
+	} else {
+		return nil;
+	}
+}
+
+#pragma mark -
+#pragma mark TTModel protocol
+
+- (void)load:(TTURLRequestCachePolicy)cachePolicy more:(BOOL)more {
+	[self didFinishLoad];
+}
+
+#pragma mark -
+#pragma mark Memory management
+
+- (void)dealloc {
+	[self.settings release];
+	[self.images release];
+	[self.title release];
+    [super dealloc];
+}
+
+@end

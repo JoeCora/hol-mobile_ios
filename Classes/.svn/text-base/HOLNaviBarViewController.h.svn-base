@@ -1,0 +1,22 @@
+//
+//  HOLNaviBarViewController.h
+//
+//  Created by Joe Cora on 5/17/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
+
+@interface HOLNaviBarViewController : UIViewController {
+	UILabel *naviLabel;
+}
+
+@property (nonatomic, retain) IBOutlet UILabel *naviLabel;
+
+// Public function declarations
+- (id)initWithiPad:(BOOL)isiPadDevice;
+- (void)setText:(NSString *)labelText;
+
+@end

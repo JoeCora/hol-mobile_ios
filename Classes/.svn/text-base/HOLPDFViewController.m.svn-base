@@ -1,0 +1,118 @@
+//
+//  HOLPDFViewController.m
+//
+//  Created by Joe Cora on 5/25/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import "HOLPDFViewController.h"
+
+@implementation HOLPDFViewController
+
+@synthesize settings;
+@synthesize pdfView;
+@synthesize loadingView;
+@synthesize loadingTimer;
+@synthesize sectionType;
+
+// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+- (void)viewDidLoad {
+	[super viewDidLoad];
+	
+	// Load PDF into PDF view from the PDF URL
+	[self.pdfView loadRequest:[NSURLRequest requestWithURL:[self.settings getPDFURL]]];
+	
+	// Show loading in center of view
+	CGRect loadingFrame = self.loadingView.frame;
+	
+	loadingFrame.origin.x = [UIScreen mainScreen].applicationFrame.size.width / 2;
+	loadingFrame.origin.y = [UIScreen mainScreen].applicationFrame.size.height / 2 - 44.0;
+	
+	self.loadingView.frame = loadingFrame;
+	
+	[self.view addSubview:self.loadingView];
+	
+	[self.loadingView startAnimating];
+	
+	// Set timer to check when PDF is finished loading
+	self.loadingTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+													 target:self selector:@selector(stopWhenPDFLoaded)
+													   userInfo:nil repeats:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	
+	// Hide loading image
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HOLHIDELOADING" object:self];
+	
+	// Set title text when view is about to be shown
+	if (self.sectionType == HOLTABCONTROLLERTAXON) {
+		[self.settings.taxonNaviBar setText:@"Literature Viewer"];
+	} else {
+		[self.settings.libraryNaviBar setText:@"Literature Viewer"];
+	}
+}
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations
+    return YES;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		[self.navigationController setNavigationBarHidden:NO];
+	} else {
+		[self.navigationController setNavigationBarHidden:YES];
+	}
+}
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+	self.pdfView = nil;
+}
+
+- (void)dealloc {
+	[self.settings release];
+	[self.pdfView release];
+	[self.loadingView release];
+	[self.loadingTimer release];
+	[super dealloc];
+}
+
+// Public functions
+- (id)initWithSettings:(HOLSettings *)loadSettings section:(HOLTABCONTROLLERTYPE)tabSection {
+	self = [super initWithNibName:@"HOLPDF" bundle:[NSBundle mainBundle]];
+	
+	self.settings = loadSettings;
+	sectionType = tabSection;
+	
+	// Initialize loading indicator
+	UIActivityIndicatorView *tempLoadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+	self.loadingView = tempLoadingView;
+	[tempLoadingView release];
+	
+	return self;
+}
+
+- (void)stopWhenPDFLoaded {
+	// Remove loading image when PDF finishes loading
+	if (!self.pdfView.loading) {
+		[self.loadingView removeFromSuperview];
+		[self.loadingView stopAnimating];
+		
+		[self.loadingTimer invalidate];
+	}
+}
+
+@end

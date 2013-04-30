@@ -1,0 +1,84 @@
+//
+//  HOLSettings.h
+//  HymOnline
+//
+//  Created by Joe Cora on 5/13/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import <SystemConfiguration/SystemConfiguration.h>
+#import "HOLNaviBarViewController.h"
+
+// Constants ///////////
+#define ROOTVIEWTITLETEXT "Hymenoptera Online"
+#define HOL_BASE_URL @"http://hol.osu.edu/hymDB/OJ_Break."
+#define UIColorFromRGB(rgbValue) [UIColor \
+	colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+	green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+	blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#define LIBRARY_LIST_FILENAME @"libraryList.dat"
+
+// Enumerations ///////
+typedef enum HOLTABCONTROLLERTYPE {
+	HOLTABCONTROLLERTAXON,
+	HOLTABCONTROLLERNEARBY,
+	HOLTABCONTROLLERSEARCH,
+	HOLTABCONTROLLERLIBRARY,
+	HOLTABCONTROLLERMORE,
+} HOLTABCONTROLLERTYPE;
+
+@interface HOLSettings : NSObject {
+	HOLNaviBarViewController *taxonNaviBar;
+	HOLNaviBarViewController *nearbyNaviBar;
+	HOLNaviBarViewController *searchNaviBar;
+	HOLNaviBarViewController *libraryNaviBar;
+	HOLNaviBarViewController *moreNaviBar;
+	NSString *currentTNUID;
+	NSString *currentPubID;
+	NSString *currentLocID;
+	NSURL *currentPDFURL;
+	NSArray *libraryList;
+	BOOL isiPad;
+	BOOL isInternetEnabled;
+	BOOL isPortraitLocked;
+	NSInteger nNumDownloads;
+}
+
+@property (nonatomic, retain) HOLNaviBarViewController *taxonNaviBar;
+@property (nonatomic, retain) HOLNaviBarViewController *nearbyNaviBar;
+@property (nonatomic, retain) HOLNaviBarViewController *searchNaviBar;
+@property (nonatomic, retain) HOLNaviBarViewController *libraryNaviBar;
+@property (nonatomic, retain) HOLNaviBarViewController *moreNaviBar;
+@property (nonatomic, retain) NSString *currentTNUID;
+@property (nonatomic, retain) NSString *currentPubID;
+@property (nonatomic, retain) NSString *currentLocID;
+@property (nonatomic, retain) NSURL *currentPDFURL;
+@property (nonatomic, retain) NSArray *libraryList;
+@property (nonatomic, readonly) BOOL isiPad;
+@property (nonatomic, readwrite) BOOL isInternetEnabled;
+@property (nonatomic, readwrite) BOOL isPortraitLocked;
+@property (nonatomic, readwrite) NSInteger nNumDownloads;
+
+// Public function declarations
+- (id)initWithiPad:(BOOL)isiPadDevice;
+- (void)loadLibraryList;
+- (NSString *)getTNUID;
+- (void)updateTNUID:(NSString *)tnuid;
+- (NSString *)getPubID;
+- (void)updatePubID:(NSString *)pub_id;
+- (NSURL *)getPDFURL;
+- (void)updatePDFURL:(NSString *)pdf_url isLocal:(BOOL)local;
+- (NSString *)getLocID;
+- (void)updateLocID:(NSString *)loc_id;
+- (NSArray *)getLibraryList;
+- (NSInteger)isPubInLibrary:(NSInteger)pub_id;
+- (void)addToLibrary:(NSDictionary *)pub_info;
+- (void)removeFromLibrary:(NSInteger)pub_pos;
+- (BOOL)allowRotateToOrientation:(UIInterfaceOrientation)interfaceOrientation;
+- (void)enablePortraitLock;
+- (void)disablePortraitLock;
+- (BOOL)isDocDownloadAvailable;
+- (NSString *)getFilenameFromURL:(NSString *)url;
+
+@end

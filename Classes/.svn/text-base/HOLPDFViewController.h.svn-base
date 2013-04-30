@@ -1,0 +1,30 @@
+//
+//  HOLPDFViewController.h
+//
+//  Created by Joe Cora on 5/25/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "HOLSettings.h"
+
+@interface HOLPDFViewController : UIViewController {
+	HOLSettings *settings;
+	UIWebView *pdfView;
+	UIActivityIndicatorView *loadingView;
+	NSTimer *loadingTimer;
+	HOLTABCONTROLLERTYPE sectionType;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, retain) IBOutlet UIWebView *pdfView;
+@property (nonatomic, retain) UIActivityIndicatorView *loadingView;
+@property (nonatomic, retain) NSTimer *loadingTimer;
+@property (nonatomic, readonly) HOLTABCONTROLLERTYPE sectionType;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings section:(HOLTABCONTROLLERTYPE)tabSection;
+- (void)stopWhenPDFLoaded;
+
+@end

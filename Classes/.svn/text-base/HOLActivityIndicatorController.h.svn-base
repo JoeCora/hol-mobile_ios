@@ -1,0 +1,23 @@
+//
+//  HOLActivityIndicatorController.h
+//  HymOnline
+//
+//  Created by Joe Cora on 8/2/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+
+@interface HOLActivityIndicatorController : UIViewController {
+	UIActivityIndicatorView *loadingView;
+}
+
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingView;
+
+// Public function declarations
+- (id)initWithiPad:(BOOL)isiPad;
+- (void)show;
+- (void)hide;
+
+@end

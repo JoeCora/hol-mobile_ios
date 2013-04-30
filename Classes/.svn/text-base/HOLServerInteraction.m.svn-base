@@ -1,0 +1,207 @@
+//
+//  HOLServerInteraction.m
+//  HymOnline
+//
+//  Created by Joe Cora on 3/6/10.
+//  Copyright 2010 Ohio State University. All rights reserved.
+//
+
+#import "HOLServerInteraction.h"
+
+// Private function declarations
+@interface HOLServerInteraction()
+- (NSString *)getURL:(NSString *)url;
+- (NSDictionary *)convertJSONtoDictionary:(NSString *)jsonString;
+@end
+
+
+// Interaction implementation
+@implementation HOLServerInteraction
+
+@synthesize settings;
+
+- (void)dealloc {
+	[self.settings release];
+    [super dealloc];
+}
+
+// Public functions
+- (id)initWithSettings:(HOLSettings *)loadSettings {
+	self = [super init];
+	
+	self.settings = loadSettings;
+	
+	return self;
+}
+
+- (NSDictionary *)getSearchResultsFromString:(NSString *)searchString {
+	NSString *url = [NSString stringWithFormat:@"%@getSearchResults?name=%@%%&limit=50&callback=", HOL_BASE_URL, searchString];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getTaxonStats {
+	NSString *url = [NSString stringWithFormat:@"%@getTaxonStats?tnuid=%@&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getTaxonHierarchy {
+	NSString *url = [NSString stringWithFormat:@"%@getTaxonHierarchy?tnuid=%@&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getTaxonInfo {
+	NSString *url = [NSString stringWithFormat:@"%@getTaxonInfo?tnuid=%@&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getIncludedTaxa {
+	NSString *url = [NSString stringWithFormat:@"%@getIncludedTaxa?tnuid=%@&showSyns=N&showFossils=Y&callback=", HOL_BASE_URL,
+					 [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getTaxonSynonyms {
+	NSString *url = [NSString stringWithFormat:@"%@getTaxonSynonyms?tnuid=%@&showFossils=Y&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getTaxonLiterature {
+	NSString *url = [NSString stringWithFormat:@"%@getTaxonLiterature?tnuid=%@&showSyns=N&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getLocalities {
+	NSString *url = [NSString stringWithFormat:@"%@getLocalities?tnuid=%@&instID=0&precDecimals=4&showChildren=N&callback=", HOL_BASE_URL,
+					 [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getTaxonImages {
+	NSString *url = [NSString stringWithFormat:@"%@getTaxonImages?tnuid=%@&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getInsts {
+	NSString *url = [NSString stringWithFormat:@"%@getInsts?tnuid=%@&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getAssociations {
+	NSString *url = [NSString stringWithFormat:@"%@getAssociations?tnuid=%@&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getHabitats {
+	NSString *url = [NSString stringWithFormat:@"%@getHabitats?tnuid=%@&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getTypes {
+	NSString *url = [NSString stringWithFormat:@"%@getTypes?tnuid=%@&showSyns=Y&callback=", HOL_BASE_URL, [self.settings getTNUID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getLitReference {
+	NSString *url = [NSString stringWithFormat:@"%@getLitReference?pub_id=%@&callback=", HOL_BASE_URL, [self.settings getPubID]];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getLocalityInfo:(HOLTABCONTROLLERTYPE)tabSection {
+	NSString *tnuid = @"0";
+	
+	// Check whether to include tnuid in query (taxon maps only)
+	if (tabSection == HOLTABCONTROLLERTAXON) {
+		tnuid = [self.settings getTNUID];
+	}
+	
+	NSString *url = [NSString stringWithFormat:@"%@getLocalityInfo?locID=%@&tnuid=%@&instID=0&showChildren=N&callback=",
+					 HOL_BASE_URL, [self.settings getLocID], tnuid];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+- (NSDictionary *)getProximityCollTripsWithLat:(double)lat lng:(double)lng miles:(NSInteger)miles {
+	NSString *url = [NSString stringWithFormat:@"%@getProximityCollTrips?lat=%f&lng=%f&miles=%d&callback=",
+					 HOL_BASE_URL, lat, lng, miles];
+	NSString *jsonResponse = [self getURL:url];
+	NSDictionary *dictResponse = [self convertJSONtoDictionary:jsonResponse];
+	
+	return dictResponse;
+}
+
+// Private functions
+- (NSString *)getURL:(NSString *)url {
+	// URL encode the string
+	NSString* escapedUrl = [url stringByAddingPercentEscapesUsingEncoding:NSISOLatin1StringEncoding];
+	NSURL* urlRequest = [NSURL URLWithString:escapedUrl];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlRequest
+														   cachePolicy:NSURLRequestReloadIgnoringCacheData
+													   timeoutInterval:120];	
+	NSURLResponse *response;
+	NSError *error;
+	NSData *responseData = [NSURLConnection sendSynchronousRequest:request
+										 returningResponse:&response
+													 error:&error];
+	
+	NSString *jsonString = [NSString stringWithCString:[responseData bytes] encoding:NSISOLatin1StringEncoding];
+	
+	// Remove invalid portions of JSON string [beginning '(' and ending ');']
+	NSRange jsonRange = NSMakeRange(1, [jsonString length] - 3);
+	NSString *correctedJSON = [jsonString substringWithRange:jsonRange];
+	
+	return correctedJSON;
+}
+
+- (NSDictionary *)convertJSONtoDictionary:(NSString *)jsonString {
+	NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+	NSError *error = nil;
+	NSDictionary *dictionary = [[CJSONDeserializer deserializer] deserializeAsDictionary:jsonData error:&error];
+	
+	return dictionary;
+}
+
+@end

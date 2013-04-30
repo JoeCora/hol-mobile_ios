@@ -1,0 +1,30 @@
+//
+//  HOLLitReferenceController.h
+//  HymOnline
+//
+//  Created by Joe Cora on 5/21/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HOLServerInteraction.h"
+#import "HOLCell.h"
+#import "HOLSettings.h"
+
+@interface HOLLitReferenceController : UITableViewController {
+	HOLSettings *settings;
+	NSDictionary *generalInfo;
+	NSArray *sections;
+	NSInteger nNumRows;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, retain) NSDictionary *generalInfo;
+@property (nonatomic, retain) NSArray *sections;
+@property (nonatomic) NSInteger nNumRows;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings;
+- (void)showPDF;
+
+@end

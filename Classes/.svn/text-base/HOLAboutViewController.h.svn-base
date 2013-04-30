@@ -1,0 +1,22 @@
+//
+//  HOLAboutViewController.h
+//
+//  Created by Joe Cora on 9/15/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+@interface HOLAboutViewController : UIViewController {
+	UIScrollView *masterView;
+}
+
+@property(nonatomic, retain) IBOutlet UIScrollView *masterView;
+
+// Public function declarations
+- (id)initWithiPad:(BOOL)isiPad;
+- (IBAction)sendEmail;
+- (IBAction)gotoSite;
+
+@end

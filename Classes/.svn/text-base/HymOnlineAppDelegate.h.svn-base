@@ -1,0 +1,78 @@
+//
+//  HymOnlineAppDelegate.h
+//  HymOnline
+//
+//  Created by Joe Cora on 3/1/10.
+//  Copyright Ohio State University 2010. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HOLNaviBarViewController.h"
+#import "HOLTaxonBodyController.h"
+#import "HOLSearchController.h"
+#import "HOLLibraryController.h"
+#import "HOLNearbyMapController.h"
+#import "HOLTaxonGeneralInfoController.h"
+#import "HOLTaxonIncludedTaxaController.h"
+#import "HOLTaxonSynonymsController.h"
+#import "HOLTaxonLiteratureController.h"
+#import "HOLTaxonMapController.h"
+#import "HOLTaxonImagesController.h"
+#import "HOLTaxonCollectionsController.h"
+#import "HOLTaxonAssociations.h"
+#import "HOLTaxonHabitats.h"
+#import "HOLTaxonTypes.h"
+#import "HOLLitReferenceController.h"
+#import "HOLMapInfoController.h"
+#import "HOLPDFViewController.h"
+#import "HOLMoreController.h"
+#import "HOLActivityIndicatorController.h"
+#import "HOLSettings.h"
+
+@class HymOnlineViewController;
+
+@interface HymOnlineAppDelegate : NSObject <UIApplicationDelegate> {
+    UIWindow *window;
+	UITabBarController *tabController;
+	UINavigationController *taxonController;
+	UINavigationController *nearbyNaviController;
+	UINavigationController *searchNaviController;
+	UINavigationController *libraryNaviController;
+	UINavigationController *moreNaviController;
+	HOLActivityIndicatorController *loadingController;
+	HOLSettings *settings;
+}
+
+@property (nonatomic, retain) UIWindow *window;
+@property (nonatomic, retain) UITabBarController *tabController;
+@property (nonatomic, retain) UINavigationController *taxonController;
+@property (nonatomic, retain) UINavigationController *nearbyNaviController;
+@property (nonatomic, retain) UINavigationController *searchNaviController;
+@property (nonatomic, retain) UINavigationController *libraryNaviController;
+@property (nonatomic, retain) UINavigationController *moreNaviController;
+@property (nonatomic, retain) HOLActivityIndicatorController *loadingController;
+@property (nonatomic, retain) HOLSettings *settings;
+
+// Public function declarations
+- (void)loadNewTaxon;
+- (void)showTaxonGeneralInfo;
+- (void)showTaxonIncludedTaxa;
+- (void)showTaxonSynonyms;
+- (void)showTaxonLiterature;
+- (void)showTaxonMap;
+- (void)showTaxonImages;
+- (void)showTaxonCollections;
+- (void)showTaxonAssociations;
+- (void)showTaxonHabitats;
+- (void)showTaxonTypes;
+- (void)showTaxonLitReference;
+- (void)showLocInfo;
+- (void)showLitViewer;
+- (void)showLibrary;
+- (void)showMore;
+- (void)showLoading;
+- (void)hideLoading;
+- (void)updateDownloadIndicator;
+
+@end
+

@@ -1,0 +1,83 @@
+//
+//  HOLNearbyMapSettings.m
+//
+//  Created by Joe Cora on 8/24/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import "HOLNearbyMapSettings.h"
+
+@implementation HOLNearbyMapSettings
+
+@synthesize delegate;
+@synthesize distanceSlider;
+@synthesize distanceLabel;
+
+- (void)viewWillAppear:(BOOL)animated {
+	// Set title text when view is about to be shown
+	[delegate updateTitleText:@"Nearby Settings"];
+	
+	// Update distance value within settings
+	self.distanceSlider.value = [delegate getDistance];
+	self.distanceLabel.text = [NSString stringWithFormat:@"%d", (NSInteger)self.distanceSlider.value];
+	
+	[super viewWillAppear:animated];
+}
+
+/*
+ // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
+ - (void)viewDidLoad {
+ [super viewDidLoad];
+ }
+ */
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations
+    return YES;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		[self.navigationController setNavigationBarHidden:NO];
+	} else {
+		[self.navigationController setNavigationBarHidden:YES];
+	}
+}
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+	
+	self.distanceSlider = nil;
+	self.distanceLabel = nil;
+}
+
+- (void)dealloc {
+	[super dealloc];
+}
+
+// Public functions
+- (id)initWithiPad:(BOOL)isiPad {
+	if (isiPad) {
+		self = [super initWithNibName:@"HOLNearbyMapSettings-iPad" bundle:[NSBundle mainBundle]];
+	} else {
+		self = [super initWithNibName:@"HOLNearbyMapSettings" bundle:[NSBundle mainBundle]];
+	}
+	
+	return self;
+}
+
+- (IBAction)setNewDistance {
+	self.distanceLabel.text = [NSString stringWithFormat:@"%d", (NSInteger)self.distanceSlider.value];
+	
+	[delegate updateDistance:(NSInteger)self.distanceSlider.value];
+}
+
+@end

@@ -1,0 +1,253 @@
+//
+//  HOLTaxonAssociations.m
+//  HymOnline
+//
+//  Created by Joe Cora on 8/3/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import "HOLTaxonAssociations.h"
+
+
+@implementation HOLTaxonAssociations
+
+@synthesize associations, nNumRows;
+@synthesize settings;
+
+#pragma mark -
+#pragma mark Initialization
+
+/*
+ - (id)initWithStyle:(UITableViewStyle)style {
+ // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
+ if ((self = [super initWithStyle:style])) {
+ }
+ return self;
+ }
+ */
+
+
+#pragma mark -
+#pragma mark View lifecycle
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+	
+    self.clearsSelectionOnViewWillAppear = YES;
+	
+	// Set table view styles
+	self.tableView.backgroundColor = UIColorFromRGB(0xFEF1B5);
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	self.tableView.rowHeight = 65.0;
+	
+	// Check which taxon sections to show
+	HOLServerInteraction *server = [[HOLServerInteraction alloc] initWithSettings:self.settings];
+	NSDictionary *dictInfo = [server getAssociations];
+	
+	[server release];
+	
+	// Check if results were available (internet enabled)
+	if (dictInfo != nil) {
+		NSMutableArray *sectionsAssocs = [dictInfo objectForKey:@"associations"];
+		
+		self.nNumRows = sectionsAssocs.count;
+		
+		self.associations = sectionsAssocs;
+	} else {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"Server communication error" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		[alert release]; 
+	}
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	
+	// Hide loading image
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HOLHIDELOADING" object:self];
+	
+	// Set title text when view is about to be shown
+	[self.settings.taxonNaviBar setText:@"Associations"];
+}
+
+/*
+ - (void)viewDidAppear:(BOOL)animated {
+ [super viewDidAppear:animated];
+ }
+ */
+/*
+ - (void)viewWillDisappear:(BOOL)animated {
+ [super viewWillDisappear:animated];
+ }
+ */
+/*
+ - (void)viewDidDisappear:(BOOL)animated {
+ [super viewDidDisappear:animated];
+ }
+ */
+
+// Override to allow orientations other than the default portrait orientation.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations
+    return YES;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
+		[self.navigationController setNavigationBarHidden:NO];
+	} else {
+		[self.navigationController setNavigationBarHidden:YES];
+	}
+}
+
+#pragma mark -
+#pragma mark Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // Return the number of sections.
+    return 1;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    // Return the number of rows in the section.
+    return self.nNumRows;
+}
+
+
+// Customize the appearance of table view cells.
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *CellIdentifier = @"Cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+    }
+    
+    // Configure the cell based on its position within the sections array
+	NSDictionary *dictCell = [self.associations objectAtIndex:indexPath.row];
+	
+	cell.contentView.backgroundColor = [UIColor clearColor];
+	
+	// Merge parent hierarchy
+	NSString* szHier = @"";
+	NSDictionary* dictHier = [dictCell objectForKey:@"hier"];
+	NSString* nextRank = @"Order";
+	NSDictionary* currentHierTaxon = [dictHier objectForKey:nextRank];
+	
+	while (currentHierTaxon != nil) {
+		if ([nextRank isEqualToString:@"Order"]) {
+			szHier = [currentHierTaxon objectForKey:@"name"];
+		} else {
+			szHier = [NSString stringWithFormat:@"%@: %@", szHier, [currentHierTaxon objectForKey:@"name"]];
+		}
+		
+		nextRank = [currentHierTaxon objectForKey:@"next"];
+		currentHierTaxon = [dictHier objectForKey:nextRank];
+	}
+	
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	
+	// Set text and adjust cell
+	cell.textLabel.text = [NSString stringWithFormat:@"%@ %@ (%@)",
+						   [dictCell objectForKey:@"taxon"], [dictCell objectForKey:@"author"], [dictCell objectForKey:@"type"]];
+	cell.textLabel.numberOfLines = 2;
+	cell.detailTextLabel.text = szHier;
+	
+    return cell;
+}
+
+
+/*
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
+
+
+/*
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+ 
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+ }   
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }   
+ }
+ */
+
+
+/*
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+ }
+ */
+
+
+/*
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
+
+
+#pragma mark -
+#pragma mark Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	// Show loading image
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HOLSHOWLOADING" object:self];
+	
+	// Set new tnuid
+	[self.settings updateTNUID:[[self.associations objectAtIndex:indexPath.row] objectForKey:@"id"]];
+	
+	// Show selected taxon
+	[self performSelector:@selector(showNewTaxon) withObject:nil afterDelay:0.0];
+}
+
+
+#pragma mark -
+#pragma mark Memory management
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Relinquish ownership any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
+    // For example: self.myOutlet = nil;
+}
+
+
+- (void)dealloc {
+	[self.settings release];
+	[self.associations release];
+    [super dealloc];
+}
+
+// Public functions
+- (id)initWithSettings:(HOLSettings *)loadSettings {
+	self = [super initWithStyle:UITableViewStylePlain];
+	
+	self.settings = loadSettings;
+	
+	return self;
+}
+
+- (void)showNewTaxon {
+	// Send message to load new taxon page
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"HOLLOADNEWTAXON" object:self];
+}
+
+@end
+

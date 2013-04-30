@@ -1,0 +1,28 @@
+//
+//  HOLPictureSource.h
+//  HymOnline
+//
+//  Created by Joe Cora on 4/3/10.
+//  Copyright 2010 Ohio State University. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "Three20/Three20.h"
+#import "HOLServerInteraction.h"
+#import "HOLSettings.h"
+#import "HOLPicture.h"
+
+@interface HOLPictureSource : TTModel <TTPhotoSource> {
+	HOLSettings *settings;
+	NSArray *images;
+	NSString *title;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, retain) NSArray *images;
+@property (nonatomic, readwrite, copy) NSString *title;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings type:(NSString *)type;
+
+@end

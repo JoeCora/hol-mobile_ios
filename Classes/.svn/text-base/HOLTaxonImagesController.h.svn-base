@@ -1,0 +1,25 @@
+//
+//  HOLTaxonImagesController.h
+//  HymOnline
+//
+//  Created by Joe Cora on 3/24/10.
+//  Copyright 2010 Ohio State University. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "Three20/Three20.h"
+#import "HOLSettings.h"
+#import "HOLPictureSource.h"
+
+@interface HOLTaxonImagesController : TTThumbsViewController <TTThumbsViewControllerDelegate> {
+	HOLSettings *settings;
+	HOLPictureSource *pictureSource;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, retain) HOLPictureSource *pictureSource;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings;
+
+@end

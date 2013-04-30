@@ -1,0 +1,30 @@
+//
+//  HOLTaxonBodyController.h
+//  HymOnline
+//
+//  Created by Joe Cora on 3/1/10.
+//  Copyright 2010 Ohio State University. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HOLTaxonHierBarController.h"
+#import "HOLTaxonContentController.h"
+#import "HOLSettings.h"
+
+@interface HOLTaxonBodyController : UIViewController {
+	HOLTaxonHierBarController *hierController;
+	HOLTaxonContentController *contentController;
+	HOLSettings *settings;
+	BOOL isInLandscape;
+}
+
+@property (nonatomic, retain) HOLTaxonHierBarController *hierController;
+@property (nonatomic, retain) HOLTaxonContentController *contentController;
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, readwrite) BOOL isInLandscape;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings;
+- (void)loadNewTaxon;
+
+@end

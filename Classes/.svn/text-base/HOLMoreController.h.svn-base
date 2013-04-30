@@ -1,0 +1,23 @@
+//
+//  HOLMoreController.h
+//  HymOnline
+//
+//  Created by Joe Cora on 9/15/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HOLAboutViewController.h"
+#import "HOLSettings.h"
+
+@interface HOLMoreController : UITableViewController {
+	HOLSettings *settings;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings;
+- (void)showAbout;
+
+@end

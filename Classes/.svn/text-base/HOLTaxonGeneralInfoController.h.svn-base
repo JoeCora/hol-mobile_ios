@@ -1,0 +1,27 @@
+//
+//  HOLTaxonGeneralInfoController.h
+//
+//  Created by Joe Cora on 3/12/10.
+//  Copyright 2010 Ohio State University. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HOLServerInteraction.h"
+#import "HOLSettings.h"
+
+@interface HOLTaxonGeneralInfoController : UITableViewController {
+	HOLSettings *settings;
+	NSDictionary *generalInfo;
+	NSArray *sections;
+	NSInteger nNumRows;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, retain) NSDictionary *generalInfo;
+@property (nonatomic, retain) NSArray *sections;
+@property (nonatomic) NSInteger nNumRows;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings;
+
+@end

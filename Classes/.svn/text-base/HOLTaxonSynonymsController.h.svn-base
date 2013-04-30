@@ -1,0 +1,27 @@
+//
+//  HOLTaxonSynonymsController.h
+//  HymOnline
+//
+//  Created by Joe Cora on 3/14/10.
+//  Copyright 2010 Ohio State University. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HOLServerInteraction.h"
+#import "HOLSettings.h"
+
+@interface HOLTaxonSynonymsController : UITableViewController {
+	HOLSettings *settings;
+	NSArray *includedTaxa;
+	NSInteger nNumRows;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, retain) NSArray *includedTaxa;
+@property (nonatomic) NSInteger nNumRows;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings;
+- (void)showNewTaxon;
+
+@end

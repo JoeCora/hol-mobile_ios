@@ -1,0 +1,29 @@
+//
+//  HOLLibraryController.h
+//  HymOnline
+//
+//  Created by Joe Cora on 5/26/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HOLCell.h"
+#import "HOLSettings.h"
+
+@interface HOLLibraryController : UITableViewController {
+	HOLSettings *settings;
+	NSInteger nNumRows;
+	BOOL bIsEditing;
+}
+
+@property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic) NSInteger nNumRows;
+@property (nonatomic) BOOL bIsEditing;
+
+// Public function declarations
+- (id)initWithSettings:(HOLSettings *)loadSettings;
+- (void)updateLibrary;
+- (void)toggleLibraryEditing;
+- (void)showPDF;
+
+@end

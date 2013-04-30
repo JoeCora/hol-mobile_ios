@@ -1,0 +1,37 @@
+//
+//  HOLNearbyMapSettings.h
+//
+//  Created by Joe Cora on 8/24/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+//////////////////////////////////////////////////////////////////////////
+@protocol HOLNearbyMapSettingsDelegate <NSObject>
+
+- (void)updateTitleText:(NSString *)titleText;
+- (NSInteger)getDistance;
+- (void)updateDistance:(NSInteger)distance;
+
+@optional
+
+@end
+
+//////////////////////////////////////////////////////////////////////////
+@interface HOLNearbyMapSettings : UIViewController {
+	id<HOLNearbyMapSettingsDelegate> delegate;
+	UISlider *distanceSlider;
+	UILabel *distanceLabel;
+}
+
+@property (assign) id<HOLNearbyMapSettingsDelegate> delegate;
+@property (nonatomic, retain) IBOutlet UISlider *distanceSlider;
+@property (nonatomic, retain) IBOutlet UILabel *distanceLabel;
+
+// Public function declarations
+- (id)initWithiPad:(BOOL)isiPad;
+- (IBAction)setNewDistance;
+
+@end
