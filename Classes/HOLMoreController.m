@@ -3,7 +3,7 @@
  All rights reserved.
  
  Created by Joe Cora on 15 Sep 2010
- Last revised on 29 Apr 2013
+ Last revised on 30 Apr 2013
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -33,6 +33,7 @@
 @implementation HOLMoreController
 
 @synthesize settings;
+@synthesize sections;
 
 #pragma mark -
 #pragma mark Initialization
@@ -58,6 +59,16 @@
 	// Set table view styles
 	self.tableView.backgroundColor = UIColorFromRGB(0xFEF1B5);
 	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    
+    // Set sections to show
+    NSMutableArray *sectionsShow = [[NSMutableArray alloc] initWithCapacity:2];
+    
+    [sectionsShow addObject:@"about"];
+    [sectionsShow addObject:@"bug"];
+    
+    self.sections = sectionsShow;
+    
+    [sectionsShow release];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -122,12 +133,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 1;
+    return [self.sections count];
 }
 
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *sectionName = [self.sections objectAtIndex:indexPath.row];
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -138,7 +150,12 @@
     // Configure the cell based on its position within the sections array
 	cell.contentView.backgroundColor = [UIColor clearColor];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	cell.textLabel.text = @"About";
+    
+	if ([sectionName isEqualToString:@"about"]) {
+        cell.textLabel.text = @"About";
+    } else if ([sectionName isEqualToString:@"bug"]) {
+        cell.textLabel.text = @"Report a Bug";
+    }
 	
     return cell;
 }
@@ -188,11 +205,18 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	// Show loading image
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"HOLSHOWLOADING" object:self];
+    NSString *sectionName = [self.sections objectAtIndex:indexPath.row];
 	
-	// Show about page
-	[self performSelector:@selector(showAbout) withObject:nil afterDelay:0.0];
+    if ([sectionName isEqualToString:@"about"]) {
+        // Show loading image
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HOLSHOWLOADING" object:self];
+        
+        // Show about page
+        [self performSelector:@selector(showAbout) withObject:nil afterDelay:0.0];
+    } else if ([sectionName isEqualToString:@"bug"]) {
+        // Send bug handling URL to OS
+        [self performSelector:@selector(reportBug) withObject:nil afterDelay:0.0];
+    }
 }
 
 
@@ -233,6 +257,11 @@
 	[self.navigationController pushViewController:aboutController animated:YES];
 	
 	[aboutController release];
+}
+
+- (void)reportBug {
+	// Open URL to GitHub issue page
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/JoeCora/hol-mobile_ios/issues"]];
 }
 
 @end

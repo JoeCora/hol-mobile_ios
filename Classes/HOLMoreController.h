@@ -3,7 +3,7 @@
  All rights reserved.
  
  Created by Joe Cora on 15 Sep 2010
- Last revised on 29 Apr 2013
+ Last revised on 30 Apr 2013
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -34,12 +34,15 @@
 
 @interface HOLMoreController : UITableViewController {
 	HOLSettings *settings;
+	NSArray *sections;
 }
 
 @property (nonatomic, retain) HOLSettings *settings;
+@property (nonatomic, retain) NSArray *sections;
 
 // Public function declarations
 - (id)initWithSettings:(HOLSettings *)loadSettings;
 - (void)showAbout;
+- (void)reportBug;
 
 @end
